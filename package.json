@@ -1,0 +1,37 @@
+{
+  "name": "xy-server",
+  "version": "1.0.0",
+  "description": "raspberry pi server for the makeblock XY plotter v2.0",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "node server/index.js",
+    "dev": "budo public/index.js:bundle.js -P -l -d public",
+    "build": "browserify public/index.js > public/bundle.js",
+    "start": "browserify public/index.js > public/bundle.js && node index.js"
+  },
+  "keywords": [
+    "plotter",
+    "xy",
+    "raspberry",
+    "pi",
+    "server",
+    "makeblock"
+  ],
+  "author": "Arnaud Juracek <arnaud.juracek@gmail.com> (http://arnaudjuracek.fr)",
+  "license": "MIT",
+  "devDependencies": {
+    "browserify": "^13.1.1",
+    "budo": "^9.2.1",
+    "uglify-js": "^2.7.4"
+  },
+  "browserify": {
+    "transform": []
+  },
+  "dependencies": {
+    "express": "^4.14.0",
+    "socket.io": "^1.5.1",
+    "socket.io-client": "^1.5.1",
+    "socketio-file-upload": "^0.5.2",
+    "xy-plotter": "github:arnaudjuracek/xy"
+  }
+}

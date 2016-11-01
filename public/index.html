@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0,minimal-ui">
+  <title>xy-server</title>
+  <meta name="description" content="raspberry pi server for the makeblock XY plotter v2.0">
+  <meta name="author" content="Arnaud Juracek <arnaud.juracek@gmail.com> (http://arnaudjuracek.fr)">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main id="app">
+
+    <div class="dropzone easing" id="file_drop" dropzone="copy">
+      <div class="progress easing" id="uploadProgress"></div>
+      <h1>queue file</h1>
+    </div>
+
+    <div class="console easing" id="console"><h1>setting current job to vortex</h1></div>
+
+    <div class="cards">
+
+      <div class="history easing" id="history"></div>
+
+      <div class="queue" id="queue">
+        <div class="card easing" id="template">
+          <header>
+            <h1>untitled</h1>
+            <aside>
+              <time datetime=""></time>
+              <a class="uid" href="#"></a>
+            </aside>
+          </header>
+          <div class="img-wrapper">
+            <img src="#" class="easing">
+            <div class="progress easing"></div>
+          </div>
+          <div class="toolbar easing">
+            <time datetime="" class="btn disabled duration easing">
+              <span class="elapsed"></span>
+              <span class="eta"></span>
+            </time>
+            <div class="buttons noselect"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+  <script src="bundle.js"></script>
+</body>
+</html>
