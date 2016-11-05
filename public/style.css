@@ -149,6 +149,7 @@ body[data-drag=true] .dropzone {
 }
 
 .card .img-wrapper .progress {
+  z-index: 2;
   position: absolute;
   bottom: 2px;
   left: 0;
@@ -156,11 +157,34 @@ body[data-drag=true] .dropzone {
   width: 0%;
 }
 
+.card .img-wrapper .cmd {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 2px;
+  background: rgba(255, 255, 255, 0.7);
+  opacity: 0;
+}
+
+.card .img-wrapper .cmd h1 {
+  position: absolute;
+  color: #333;
+  top: 50%;
+  width: 100%;
+  transform: translateY(-50%);
+  margin: 0;
+  text-align: center;
+}
+
+.card:hover .img-wrapper .cmd { opacity: 1; }
+
 .card .toolbar {
   margin-top: 20px;
   white-space: nowrap;
 }
 
+.card:not(.running) .cmd,
 .card.running .btn#run,
 .card:not(:first-child) .btn#run,
 .card:not(.running) .btn#cancel,

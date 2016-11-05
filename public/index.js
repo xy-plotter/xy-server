@@ -18,8 +18,6 @@ ready(function() {
   socket.on('handshake', function(data) {
     var cards = document.querySelectorAll('.card');
     for (let i = 0; i < cards.length; i++) cards[i].remove();
-
-
     for (let i = 0; i < data.queue.length; i++) spawnJobCard(data.queue[i]);
     for (let i = 0; i < data.history.length; i++) {
       spawnJobCard(data.history[i]);
@@ -52,6 +50,9 @@ ready(function() {
       var m = Math.floor((t / (1000 * 60)) % 60);
       var s = Math.floor((t / 1000) % 60);
       timeContainer.innerHTML = ('0' + h).slice(-2) + ':' + ('0' + m).slice(-2) + ':' + ('0' + s).slice(-2);
+
+      var cmdContainer = card.querySelector('.cmd > h1');
+      cmdContainer.innerHTML = data.progress.cmd;
     }
   });
 

@@ -88,6 +88,7 @@ io.on('connection', (socket) => {
       progress: {
         value: data.progress.elapsed,
         total: data.progress.total,
+        cmd: data.cmd,
       },
       time: {
         start: progressTimer,
