@@ -1,6 +1,6 @@
 {
   "name": "xy-server",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "raspberry pi server for the makeblock XY plotter v2.0",
   "main": "lib/index.js",
   "scripts": {
@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "express": "^4.14.0",
+    "raf": "github:pqml/raf",
     "socket.io": "^1.5.1",
     "socket.io-client": "^1.5.1",
     "socketio-file-upload": "^0.5.2",

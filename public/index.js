@@ -1,5 +1,8 @@
 var io = require('socket.io-client');
+var raf = require('raf');
 var SocketIOFileUpload = require('socketio-file-upload');
+
+// -------------------------------------------------------------------------
 
 ready(function() {
   var socket = io('http://192.168.0.17:8080');
@@ -12,6 +15,95 @@ ready(function() {
   cardTemplate.remove();
 
   window.scroll(queueContainer.getBoundingClientRect().left, 0);
+
+
+  // -------------------------------------------------------------------------
+
+  var penSimulator = {
+    x: 0, y: 0, tx: 0, ty: 0,
+    width: 0, height: 0,
+    canvas: null,
+    ctx: null,
+
+    claimCanvas: function() {
+      var canvas = document.getElementById('canvas');
+      if (!canvas || canvas.length === 0) {
+        canvas = document.createElement('canvas');
+        canvas.id = 'canvas';
+        canvas.classList.add('easing');
+      }
+      return canvas;
+    },
+
+    setCanvas : function(c, w, h) {
+      this.canvas = c;
+
+      this.width = w;
+      this.height = h;
+      this.canvas.width = w;
+      this.canvas.height = h;
+      this.canvas.style.width = w + 'px';
+      this.canvas.style.height = h + 'px';
+      this.ctx = this.canvas.getContext('2d');
+    },
+
+    update: function(dt) {
+      if (this.ctx) {
+        this.ctx.clearRect(0, 0, this.width, this.height);
+
+        this.x += (this.tx - this.x) * 0.09;
+        this.y += (this.ty - this.y) * 0.09;
+
+        var reticuleSize = 10;
+        var x = Math.ceil(this.x) - 0.5;
+        var y = Math.ceil(this.y) - 0.5;
+
+        this.ctx.lineWidth = 1;
+        this.ctx.strokeStyle = '#4299EB';
+
+        this.ctx.beginPath();
+
+        this.ctx.moveTo(x, 0);
+        this.ctx.lineTo(x, y - reticuleSize * 1.5);
+          this.ctx.moveTo(x - reticuleSize, y);
+          this.ctx.lineTo(x + reticuleSize, y);
+        this.ctx.moveTo(x, y + reticuleSize * 1.5);
+        this.ctx.lineTo(x, this.height);
+
+        this.ctx.moveTo(0, y);
+        this.ctx.lineTo(x - reticuleSize * 1.5, y);
+          this.ctx.moveTo(x, y - reticuleSize);
+          this.ctx.lineTo(x, y + reticuleSize);
+        this.ctx.moveTo(x + reticuleSize * 1.5, y);
+        this.ctx.lineTo(this.width, y);
+
+        this.ctx.stroke();
+      }
+    },
+
+    exec: function(cmd) {
+      if (typeof cmd === 'string' || cmd instanceof String) {
+        var params = cmd.split(' ');
+        if (params[0] === ('G1')) {
+          var x = parseFloat(params[1].split('X').pop());
+          var y = parseFloat(params[2].split('Y').pop());
+          this.move(x, y);
+        }
+      }
+    },
+
+    move: function(x, y) {
+      if (!isNaN(x) && this.height) this.ty = this.map(x, 0, 310, 0, this.height);
+      if (!isNaN(y) && this.width) this.tx = this.map(y, 0, 380, 0, this.width);
+    },
+
+    map: function(a, in_min, in_max, out_min, out_max) { return (a - in_min) * (out_max - out_min) / (in_max - in_min) + out_min; },
+
+  };
+
+  raf.add(function(dt) {
+    penSimulator.update(dt);
+  });
 
   // -------------------------------------------------------------------------
 
@@ -39,7 +131,18 @@ ready(function() {
   socket.on('job-progress', function(data) {
     var card = document.getElementById(data.job.file);
     if (card) {
-      if (!card.classList.contains('running')) card.classList.add('running');
+      if (!card.classList.contains('running')) {
+        card.classList.add('running');
+
+        var imgWrapper = card.querySelectorAll('.img-wrapper')[0];
+        if (imgWrapper) {
+          var img = imgWrapper.querySelectorAll('img')[0];
+          img.onload = function() {
+            penSimulator.setCanvas(penSimulator.claimCanvas(), imgWrapper.clientWidth, imgWrapper.clientHeight);
+            imgWrapper.appendChild(penSimulator.canvas);
+          }
+        }
+      }
       var progressbar = card.querySelector('.progress');
       var percent = data.progress.value / data.progress.total * 100;
       progressbar.style.width = percent.toFixed(2) + '%';
@@ -53,6 +156,8 @@ ready(function() {
 
       var cmdContainer = card.querySelector('.cmd > h1');
       cmdContainer.innerHTML = data.progress.cmd;
+
+      penSimulator.exec(data.progress.cmd);
     }
   });
 
@@ -198,8 +303,6 @@ ready(function() {
   }
 
 });
-
-
 
 // -------------------------------------------------------------------------
 

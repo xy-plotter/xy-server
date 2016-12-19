@@ -219,6 +219,17 @@ body[data-drag=true] .dropzone {
 .card .toolbar .buttons .btn:not(:last-child) { margin-right: 0.25em; }
 
 /*-------------------------------------------------------------------------*/
+
+.card.running .img-wrapper canvas {
+  position: absolute;
+  top: -1px;
+  left: 0px;
+  opacity: 0;
+}
+.card.running:hover .img-wrapper canvas { opacity: 1; }
+.card:not(.running) .img-wrapper canvas { display: none; }
+
+/*-------------------------------------------------------------------------*/
 /* http://codepen.io/benague/pen/bCkyr */
 .btn {
   display: inline-block;
