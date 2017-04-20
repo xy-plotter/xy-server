@@ -108,7 +108,12 @@ function Queue(paths) {
         if (!fileExists(preview)) {
           plotterFile.export(job, preview);
         }
-        eventEmitter.emit('job-queue', jobs[jobID]);
+
+        fs.rename(file, path.join(paths.queue, jobID), () => {
+          sh.success(`${jobID} unarchived.`);
+          eventEmitter.emit('job-queue', jobs[jobID]);
+        });
+
       } else sh.error(`${jobID} not found.`);
     },
 

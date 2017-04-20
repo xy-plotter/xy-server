@@ -117,7 +117,10 @@ ready(function() {
     }
   });
 
-  socket.on('job-queue', function(job) { spawnJobCard(job, true); });
+  socket.on('job-queue', function(job) {
+    spawnJobCard(job, true);
+    console.log(job)
+  });
   socket.on('job-archive', function(job) { archiveCard(job.file); });
 
   socket.on('job-delete', function(job) {
@@ -234,28 +237,28 @@ ready(function() {
 
     // ----------------
     var toolbar = card.querySelector('.toolbar .buttons');
-    var run = createBtn('run', 'run', 'green', function() {
+    var run = createBtn('run', 'fa-pencil', 'green', function() {
       socket.emit('run');
       card.classList.add('running');
       if (card.classList.contains('paused')) card.classList.remove('paused');
     });
 
-    var pause = createBtn('pause', 'pause', 'blue', function() {
+    var pause = createBtn('pause', 'fa-toggle-on', 'blue', function() {
       socket.emit('pause');
       card.classList.add('paused');
     });
 
-    var resume = createBtn('resume', 'resume', 'blue', function() {
+    var resume = createBtn('resume', 'fa-toggle-off', 'blue', function() {
       socket.emit('resume');
       if (card.classList.contains('paused')) card.classList.remove('paused');
     });
 
-    var cancel = createBtn('cancel', 'cancel', 'red', function() {
+    var cancel = createBtn('cancel', 'fa-ban', 'red', function() {
       socket.emit('cancel');
       if (card.classList.contains('running')) card.classList.remove('running');
     });
 
-    var del = createBtn('del', 'delete', 'red', function() {
+    var del = createBtn('del', 'fa-trash', 'red', function() {
       socket.emit('delete', job.file);
     });
 
@@ -280,25 +283,33 @@ ready(function() {
 
     var toolbar = card.querySelector('.toolbar .buttons');
 
-    // TODO: handle deletion of queued redrawn jobs
-    // var redraw = createBtn('again', 'redraw', 'green', function() {
-    //   socket.emit('redraw', jobID);
-    // });
+    var redraw = createBtn('again', 'fa-history', 'green', function(btn) {
+      card.remove()
+      socket.emit('redraw', btn.getAttribute('data-jobID'));
+    });
 
-    // toolbar.appendChild(redraw);
+    redraw.setAttribute('data-jobID', jobID);
+
+    toolbar.appendChild(redraw);
 
 
     historyContainer.appendChild(fragment);
   }
 
-  function createBtn(id, label, color, cb) {
+  function createBtn(id, faName, color, cb) {
     var btn = document.createElement('a');
     btn.id = id;
     btn.className = 'btn easing ' + color;
     btn.setAttribute('href', '#');
-    btn.innerHTML = label;
 
-    btn.addEventListener('click', cb);
+    var i = document.createElement('i');
+    i.className = 'fa ' + faName
+    btn.appendChild(i);
+
+    btn.addEventListener('click', function (e) {
+      e.preventDefault()
+      cb(this)
+    });
     return btn;
   }
 
