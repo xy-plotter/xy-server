@@ -117,10 +117,7 @@ ready(function() {
     }
   });
 
-  socket.on('job-queue', function(job) {
-    spawnJobCard(job, true);
-    console.log(job)
-  });
+  socket.on('job-queue', function(job) { spawnJobCard(job, true); });
   socket.on('job-archive', function(job) { archiveCard(job.file); });
 
   socket.on('job-delete', function(job) {
@@ -208,6 +205,16 @@ ready(function() {
         progress.style.width = 0;
       }, 500);
   });
+
+  // -----------------------------------------------------------------------
+
+  var remoteShutdown = document.getElementById('remoteShutdown');
+  remoteShutdown.addEventListener('click', function (e) {
+    e.preventDefault();
+
+    document.body.classList.add('shutdown')
+    socket.emit('shutdown');
+  })
 
   // -----------------------------------------------------------------------
 

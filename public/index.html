@@ -9,11 +9,15 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main id="app">
+  <main id="app" class="easing">
 
     <div class="dropzone easing" id="file_drop" dropzone="copy">
       <div class="progress easing" id="uploadProgress"></div>
       <h1>queue file</h1>
+    </div>
+
+    <div class="remote">
+      <a href="#" class="btn easing red" id="remoteShutdown"><i class="fa fa-power-off"></i></a>
     </div>
 
     <div class="console easing" id="console"><h1>setting current job to vortex</h1></div>

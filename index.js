@@ -116,6 +116,8 @@ io.on('connection', (socket) => {
   listen('run', () => queue.run());
   listen('cancel', () => queue.serial.disconnect());
 
+  listen('shutdown', () => sh.exec('sudo', ['/sbin/shutdown', 'now']))
+
   function listen(event, cb, validate = null) {
     validate = validate || function() { return true; };
     socket.on(event, function(data, fn = null) {
